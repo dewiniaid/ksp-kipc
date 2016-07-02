@@ -30,3 +30,11 @@ There's two main scenarios where I can see the bridge being useful, though other
    complex tasks like maneuver planning.
  * **kRPC as Mission Control**: kRPC handles the overall control of a particular vessel, with requests sent to kOS for
    real-time tasks like executing a planned maneuver.
+
+## Documentation
+
+ * [Overview and architecture](/doc/index.md)
+ * [kOS API](/doc/kos.md)
+ * [KRPC API](/doc/krpc.md)
+ * [License](/doc/LICENSE.md)
+ * [All documentation](/doc/)
