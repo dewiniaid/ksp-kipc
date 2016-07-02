@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KOSKRPCBridgePlugin")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("KIPCPlugin")]
+[assembly: AssemblyDescription("IPC plugin for kOS and KRPC")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("KOSKRPCBridgePlugin")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("Next Phase Technologies")]
+[assembly: AssemblyProduct("KIPCPlugin")]
+[assembly: AssemblyCopyright("Copyright © 2016 Daniel J Grace <thisgenericname@gmail.com>")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

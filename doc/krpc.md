@@ -113,7 +113,6 @@ pending.
 Sets the `KOSProcessor`'s inbound message to this message.  Returns `True` if successful, `False` otherwise.
 
 ### KOSProcessor.CancelMessage(*messageid*=0, *message*=None, *sendercpu*=None, *sendername*=None)
-### KOSProcessor.CancelMessage(*messageid*=0, *message*=None)
 Cancels the `KOSProcessor`'s inbound message if any of the attributes match.  If all of the parameters are 
 defaulted, the message is cancelled regardless of attributes.
 
