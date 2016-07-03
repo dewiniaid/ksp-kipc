@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FEBE111A-D442-48BF-90B3-9135B577A4F6}</ProjectGuid>
+    <ProjectGuid>{A20BEE2F-F3D2-44EE-817B-FEB7AC3FF191}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KIPCPlugin</RootNamespace>
-    <AssemblyName>KIPCPlugin</AssemblyName>
+    <RootNamespace>KIPCPlugin_KRPC</RootNamespace>
+    <AssemblyName>KIPCPlugin-KRPC</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -20,19 +20,17 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Output\Plugins\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -43,40 +41,16 @@
       <HintPath>..\..\KSP\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-UnityScript">
-      <HintPath>..\..\KSP\KSP_x64_Data\Managed\Assembly-UnityScript.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-UnityScript-firstpass">
-      <HintPath>..\..\KSP\KSP_x64_Data\Managed\Assembly-UnityScript-firstpass.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="kOS">
-      <HintPath>..\..\KSP\GameData\kOS\Plugins\kOS.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="kOS.Safe">
-      <HintPath>..\..\KSP\GameData\kOS\Plugins\kOS.Safe.dll</HintPath>
+    <Reference Include="Google.Protobuf">
+      <HintPath>..\..\KSP\GameData\kRPC\Google.Protobuf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KRPC">
       <HintPath>..\..\KSP\GameData\kRPC\KRPC.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KRPC.SpaceCenter">
-      <HintPath>..\..\KSP\GameData\kRPC\KRPC.SpaceCenter.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="KRPC.UI">
       <HintPath>..\..\KSP\GameData\kRPC\KRPC.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="KSPAssets">
-      <HintPath>..\..\KSP\KSP_x64_Data\Managed\KSPAssets.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="KSPCore">
-      <HintPath>..\..\KSP\KSP_x64_Data\Managed\KSPCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KSPUtil">
@@ -100,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addon.cs" />
-    <Compile Include="KOSAddon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

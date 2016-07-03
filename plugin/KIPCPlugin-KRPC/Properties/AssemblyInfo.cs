@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KIPCPlugin")]
-[assembly: AssemblyDescription("KSP IPC plugin - baseline kOS-only Support")]
+[assembly: AssemblyTitle("KIPCPlugin-KRPC")]
+[assembly: AssemblyDescription("KSP IPC plugin - KRPC Support")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Next Phase Technologies")]
 [assembly: AssemblyProduct("KIPCPlugin")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("febe111a-d442-48bf-90b3-9135b577a4f6")]
+[assembly: Guid("a20bee2f-f3d2-44ee-817b-feb7ac3ff191")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,9 +35,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: KSPAssembly("KIPCPlugin", 1, 0)]
-[assembly: KSPAssemblyDependency("kOS", 0, 0)]
+[assembly: KSPAssembly("KIPCPlugin-KRPC", 1, 0)]
+[assembly: KSPAssemblyDependency("KIPCPlugin", 1, 0)]
+[assembly: KSPAssemblyDependency("KRPC", 0, 0)]
+[assembly: KSPAssemblyDependency("KRPC.SpaceCenter", 0, 0)]
 
 // This is the default value for ck.stamp.fody, but explicitly defining it means that our own code won't break if
 // ck.stamp.fody isn't present.
-[assembly: AssemblyInformationalVersion("%ck-standard%")]  
+[assembly: AssemblyInformationalVersion("%ck-standard%")]
