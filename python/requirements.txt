@@ -1,0 +1,7 @@
+Jinja2==2.8
+krpc==0.3.5
+krpc.clientgen==0.2.2
+krpctools==0.3.5
+MarkupSafe==0.23
+protobuf==3.0.0b3
+six==1.10.0
