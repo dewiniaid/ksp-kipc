@@ -115,4 +115,3 @@ Sets the `KOSProcessor`'s inbound message to this message.  Returns `True` if su
 ### KOSProcessor.CancelMessage(*messageid*=0, *message*=None, *sendercpu*=None, *sendername*=None)
 Cancels the `KOSProcessor`'s inbound message if any of the attributes match.  If all of the parameters are 
 defaulted, the message is cancelled regardless of attributes.
-

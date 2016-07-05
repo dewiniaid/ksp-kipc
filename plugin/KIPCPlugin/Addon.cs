@@ -6,6 +6,9 @@ using System.Reflection;
 using KSP;
 using UnityEngine;
 
+using System.IO;
+using JsonFx;
+
 namespace KIPC
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
@@ -53,6 +56,29 @@ namespace KIPC
             // Order of && matters, because we don't want to short-circuit the LogOtherPlugin calls.
             hasKRPC = LogOtherPlugin("KRPC", findAssembly("KRPC")) && hasKRPC;
             hasKRPC = LogOtherPlugin("KRPC.SpaceCenter", findAssembly("KRPC")) && hasKRPC;
+
+            // JSON serialization test.
+            String json = @"{
+                'CPU': 'Intel',
+                  'Drives': [
+                    'DVD read/writer',
+                    '500 gigabyte hard drive'
+                  ],
+                  'Whee': { 'Foo': 'Bar', 'Baz': 42 }
+                }
+                ";
+
+            try
+            {
+                var output = new JsonFx.Json.JsonReader().Read<Dictionary<string, object>>(json);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
+
+
         }
     }
 }
