@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KIPCPlugin")]
-[assembly: AssemblyDescription("KSP IPC plugin - baseline kOS-only Support")]
+[assembly: AssemblyTitle("KIPC")]
+[assembly: AssemblyDescription("KSP IPC plugin - bridge between kOS and kRPC")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Next Phase Technologies")]
-[assembly: AssemblyProduct("KIPCPlugin")]
+[assembly: AssemblyProduct("KIPC")]
 [assembly: AssemblyCopyright("Copyright © 2016 Daniel J Grace <thisgenericname@gmail.com> - Licensed GPLv3")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -35,8 +35,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: KSPAssembly("KIPCPlugin", 1, 0)]
+[assembly: KSPAssembly("KIPC", 1, 0)]
 [assembly: KSPAssemblyDependency("kOS", 0, 0)]
+[assembly: KSPAssemblyDependency("KRPC", 0, 0)]
+[assembly: KSPAssemblyDependency("KRPC.SpaceCenter", 0, 0)]
 
 // This is the default value for ck.stamp.fody, but explicitly defining it means that our own code won't break if
 // ck.stamp.fody isn't present.
