@@ -132,7 +132,7 @@ namespace KIPC.Serialization
         {
             object typeId = GetTypeIdentifier(item);
             object objectId = item.GetValueOrDefault("ref");
-            Debug.Log(string.Format("Identified object of type {0} -- object ID: {1}", typeId, objectId));
+            // Debug.Log(string.Format("Identified object of type {0} -- object ID: {1}", typeId, objectId));
             IJsonDict referenced = (objectId == null) ? null : deserializerState.references.GetValueOrDefault(objectId);
             if (typeId as string == "ref") { // Found a reference
                 if (objectId == null) throw new SerializationException("Found a missing or null reference ID.");
@@ -140,11 +140,11 @@ namespace KIPC.Serialization
                 // and we do want to replace if it did (and thus would return an actual value)
                 if (referenced == null)
                 {
-                    Debug.Log(string.Format("Adding new pending reference to {0}", objectId));
+                    // Debug.Log(string.Format("Adding new pending reference to {0}", objectId));
                     deserializerState.references[objectId] = item;
                 } else
                 {
-                    Debug.Log(string.Format("Replacing reference with actual object of type ", referenced["type"]));
+                    // Debug.Log(string.Format("Replacing reference with actual object of type ", referenced["type"]));
                 }
                 return referenced;
             }
@@ -153,6 +153,7 @@ namespace KIPC.Serialization
             TypeHandler handler = registry.GetDeserializer(typeId).CreateHandler(this);
             if (handler is ICollectionHandler)
             {
+                // FIXME: See if this code is actually needed.
                 if (item.ContainsKey("_visited"))
                 {
                     Debug.LogWarning("*** WARNING ***: Container already visited.");
@@ -171,7 +172,7 @@ namespace KIPC.Serialization
             if (referenced == null)
             {
                 deserializerState.references[objectId] = item;
-                Debug.Log("Saving reference.");
+                // Debug.Log("Saving reference.");
             }
             else
             {
@@ -183,19 +184,18 @@ namespace KIPC.Serialization
                 }
                 // Everything we've previously seen up until now points to the old object.  It's way too much of a hassle to replace it, so...
                 // instead we clear it and copy all of our data to it.
-                Debug.Log(string.Format("Copying over to actual object of type ", referenced["type"]));
+                // Debug.Log(string.Format("Copying over to actual object of type ", referenced["type"]));
                 referenced.Clear();
                 foreach(JsonKey kvp in item)
                 {
                     referenced[kvp.Key] = kvp.Value;    // Resistance is futile.  You will be assimilated.
                 }
-                Debug.Log("Done copying over");
+                // Debug.Log("Done copying over");
             }
             return referenced;
         }
         public void ResolveReferences(ICollectionHandler handler, IJsonDict item)
         {
-            var idgen = new ObjectIDGenerator();
             deserializerState = new DeserializerStateInfo();
             deserializerState.references = new Dictionary<object, IJsonDict>();
             deserializerState.pending = new Stack<IEnumerable>(handler.GetContainers(item));
@@ -209,7 +209,7 @@ namespace KIPC.Serialization
             {
                 enumerable = deserializerState.pending.Pop();
                 bool dummy;
-                Debug.Log(string.Format("Processing queued item {0}", idgen.GetId(enumerable, out dummy)));
+                // Debug.Log(string.Format("Processing queued item {0}", idgen.GetId(enumerable, out dummy)));
                 
                 var list = enumerable as IJsonList;
                 if (list != null) {
@@ -233,14 +233,10 @@ namespace KIPC.Serialization
                 }
                 throw new SerializationException(string.Format("Unexpected enumerable of type {0}", enumerable.GetType().FullName));
             }
-            Debug.Log("Done with ResolveReferences");
         }
-
-        ObjectIDGenerator dsIdGen = new ObjectIDGenerator();
 
         public object Deserialize(object input)
         {
-            Debug.Log("In Deserialize");
             if (input == null) throw new SerializationException("Encountered NULL while deserializing input.");
             // Primitives.
             input = Structure.FromPrimitive(input);
@@ -261,26 +257,20 @@ namespace KIPC.Serialization
             bool dummy;
 
             if (ich != null) {
-                Debug.Log("Processing a collection, id=" + dsIdGen.GetId(dict, out dummy).ToString());
                 // If we have a collection handler and haven't scanned for backrefs yet, scan for them.
                 if (deserializerState == null) ResolveReferences(ich, dict);
                 // Is this something we've already resolved?  If so, return that reference.
                 result = deserializerState.results.GetValueOrDefault(dict);
                 if (result != null)
                 {
-                    Debug.Log("Returning cached result.");
                     return result;
                 }
             }
-            Debug.Log("Calling ProxyDeserialize");
             result = handler.ProxyDeserialize(dict);
-            Debug.Log(".... done calling ProxyDeserialize");
             if (ich != null)
             {
-                Debug.Log("Adding result to cache");
                 deserializerState.results[dict] = result;
             }
-            Debug.Log("Returning from Deserialize");
             return result;
         }
         #endregion

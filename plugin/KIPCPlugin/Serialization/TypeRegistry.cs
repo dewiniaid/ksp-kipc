@@ -74,12 +74,8 @@ namespace KIPC.Serialization
             {
                 return serializersByIdentifier[identifier];
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException) 
             {
-                foreach(var key in serializersByIdentifier.Keys)
-                {
-                    Debug.Log("[KIPCPlugin] Have serializer for " + key);
-                }
                 throw new SerializationException(string.Format("No deserializer is defined for object class {0}", identifier));
             }
         }
