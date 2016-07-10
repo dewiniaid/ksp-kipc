@@ -119,7 +119,6 @@
     <Compile Include="Serialization\SerializesAttribute.cs" />
     <Compile Include="Util\CacheDictionary.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Serialization.cs" />
     <Compile Include="KOS\Addon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\CountingIterator.cs" />
