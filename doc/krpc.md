@@ -3,115 +3,143 @@
 ## KIPC Service
 Handles general functionality.
 
-### GetProcessor(*part*)
-Returns a `KOSProcessor` if the part is a kOSProcessor, otherwise `None`.  Equivalent to the various analogues on 
-`SpaceCenter.Part`.
+**GetProcessors(_vessel_)**
 
-### GetProcessors(*vessel*)
 Returns all `KOSProcessors` on the specified `vessel`.
 
-### GetPartsTagged(*vessel*, *tag*)
+**ResolveVessel(_guid_)**
+
+Given a vessel GUID, returns the vessel.  Use this to handle vessel references in JSON results.
+
+**GetPartsTagged(_vessel_, _tag_)**
 Returns a list of all parts tagged with the specified kOS `tag` on the specified `vessel`.
 
-### CreateMessage(*collectiontype* = CollectionType.LIST)
-Creates a new `Message`, with an initially empty collection of the specified `collectiontype`.
+**PopMessage()**
+Removes and returns the next message in the queue, or an exception if no message exists.
 
-### CreateCollection(*collectiontype*)
-Creates a collection of the particular *collectiontype*.
+**PeekMessage()**
+Returns the next message in the queue, or an exception if no message exists.  The message is not removed.
 
-## Collection class.
-kRPC does not have an optimal way to represent a list of items when the individual items may have varying types.  The
-`Collection` class serves as a workaround for this mechanism.
+## Processor class
 
-`Collection`s function as a sort of list, but this mechanism serves as an abtract representation of other data 
-structures.  You generally don't want to use a `Collection` anything beyond the initial load or retrival of values from
-it -- convert it to something appropriate based on its type and values instead.
+(May change names in a later build)
 
-Collections only persist as long as their underlying container is around.  This container is usually a `Message`, so
-it is important to read all of the data off of a message before acknowledging it.
+**_property_ Part** (get)
 
-### Collection.Type
-Returns a description of the underlying data type that this collection is intended to function as. 
+Returns the parent part of this kOSProcessor.
 
-| Value                     | Meaning
-| ------------------------- | -------
-| CollectionType.List       | Function like a `List`.  Items are appended to the list in order.
-| CollectionType.Queue      | Function like a `Queue`.  Items are added to the queue in order.
-| CollectionType.Stack      | Function like a `Stack`.  The top of the stack is the first item.
-| CollectionType.Dictionary | Function like a dictionary (`Lexicon` in kOS).  Items alternate between dictionary keys and their values.  If this contains an odd number of items, the final item is discarded silently.
+**_property_ DiskSpace** (get)
 
-### Collection.ItemCount
-Represents the number of items in the collection.
+Returns the total disk space of this processor.
 
-### Collection.ItemTypes
-Represents a list of type names that describe the argument type of each parameter in the message.
+**_property_ Powered** (get, set)
 
-### Collection.ID
-Returns the internal identifier of this collection.  Can be used to detect recursion or circular structures.
+Returns or sets whether the processor is currently turned on.  Note that power-starved still counts as turned on.
 
-### Collection.Get*{type}*(*index*=-1)
-Retrieves a item of the requested type, or the type's version of `NULL` / `0` / `""` if the conversion was
-not feasible.  Using an index of -1 is equivalent to "1 + the last index accessed", or 0 if that has never been accessed.
+**_property_ TerminalVisible** (get, set)
 
-### Collection.Add*{type}(*value*)
-Adds a parameter of the requested type to the end of the collection.
+Returns or sets whether the terminal is currently visible.
 
-### Supported Item Types
-Here's information on the types that KIPC supports.
+**SendMessage(_json_)**
 
-| Typename   | kOS Equivalent | Notes
-| ---------- | -------------- | -----
-| Integer    | ScalarValue    | kOS `ScalarValues` can be either integers or doubles.
-| Float      | ScalarValue    | Is actually a `Double`.
-| String     | String         | |
-| Boolean    | Boolean        | |
-| Vessel     | Vessel         | |
-| Body       | Body           | |
-| Vector     | Vector         | KRPC's `Vector3` type
-| Quaternion | Quaternion     | KRPC's `Quaternion` type
-| Collection | Lexicon, List, Queue or Stack | Determined by `Collection.Type`  
+Sends the particular JSON-encoded message to the processor's message queue.
 
-Note that `Direction` is not yet supported.
+## JSON format
 
-### Collection.CaseSensitive=*false*
-If this collection has keys (e.g. a dictionary or set), whether they should be treated as case-sensitive.
+Strings, integers, double/floats, booleans, and `null` are represented using their native JSON representation.
 
-## Message class
+All other types (including lists and dictionaries) are in an encapsulated format
 
-### Message.Data
-Returns a `Collection` corresponding to the data of this message.
+### Dictionary/Lexicon
+```
+{
+  "type": "dict",
+  "data": {"string key": 42, ...},
+  "keys", [1, 2, 3, 4],
+  "values", ["One", "Two", "Three", "Four"]
+}
+```
+JSON objects cannot have non-string keys, but kOS Lexicons can.  All string keys will be contained in `data`.
 
-### Message.ID
-Returns an ID representing the message.  
+Non-string keys will be listed in `keys`, with their corresponding values in `values`.  (In Python, you can construct
+that portion of the corresponding dictionary using `dict(zip(keys, values))`) 
 
-### Message.SenderCPU
-Returns the kOSProcessor that sent this message, or `NULL` if the message wasw not sent by a kOSProcessor.
+### Lists, Stacks, and Queues
+```
+{
+  "type": "list",  // or "stack" or "queue"
+  "data": [1, 2, 3, 4]
+}
+```
+For all three types, data elements are in insertion order: the oldest item on the queue is listed first, and the 
+bottom-most element of a stack is listed queue.
 
-### Message.SenderName
-Returns the kRPC Client Name that sent this message, or `NULL` if the message wasw not sent by a kRPC Client.
+### References
 
-## KOSProcessor class
+KIPC can handle recursive data structures: e.g. a list that contains itself, or a dict that is referenced multiple 
+times within a complicated structure.
 
-### KOSProcessor.HasMessage()
-Returns `True` if the kOSProcessor has any current outbound message(s). 
+If this occurs, all references to the same object will have a `ref` field with a common value.  One of the objects will
+be its normal representation, others will look like this:
+```
+{
+  "type": "ref",
+  "ref": 4,
+}
+```
 
-### KOSProcessor.GetMessage()
-Returns the kOSProcessor's current outbound message, if any.  The messages are not acknowledged. 
+For instance, a list that contains another list that contains the first may look like:
+```
+{
+  "type": "list",
+  "ref": 1,
+  "data": [{
+    "type": "list",
+    "data" [{
+      "type": "ref",
+      "ref", 1
+    }]
+  }]
+}
+```
 
-### KOSProcessor.AckMessage(*messageid*=0, *message*=None, *sendercpu*=None, *sendername*=None)
-Acknowledges the message from the `KOSProcessor` if any of the attributes match.  If all of the parameters are 
-defaulted, the message is acknowledged regardless of attributes.
+Only collection types (the four above) support references within the deserializer.
 
-### KOSProcessor.CanSendMessage
-Returns `True` if the kOSProcessor is able to receive a message.  Will be `False` if it currently has any messages
-pending.
+### Vectors
+```
+{
+  "type": "vector",
+  "data": [x, y, z]
+}
+```
 
- **Note**: There is no guarantee that this state will not change between examining it and actually attempting to send 
-  a message.
+### Vessels
+```
+{
+  "type": "vessel",
+  "data": "vessel-guid"
+}
+```
+Use `KIPC.ResolveVessel` to convert a vessel reference to an actual kRPC-usable `Vessel`.
 
-### KOSProcessor.SendMessage(message)
-Sets the `KOSProcessor`'s inbound message to this message.  Returns `True` if successful, `False` otherwise.
+### Celestial Bodies
+```
+{
+  "type": "body",
+  "data": 1,  // flightGlobals index
+}
+```
+Use `KIPC.ResolveBody` to convert a body reference to an actual kRPC-usable `CelestialBody`.
 
-### KOSProcessor.CancelMessage(*messageid*=0, *message*=None, *sendercpu*=None, *sendername*=None)
-Cancels the `KOSProcessor`'s inbound message if any of the attributes match.  If all of the parameters are 
-defaulted, the message is cancelled regardless of attributes.
+## Not yet implemented
+
+The following are from the old version of this documentation and deemed worth keeping, but they are not yet implemented.
+
+**ResolveBody(_id_)**
+
+Given a body ID, returns the celestial body.  Use this to handle body references in JSON results.
+
+**GetProcessor(_part_)**
+
+Returns the `KOSProcessors` of the specified `part`.
+
