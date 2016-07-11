@@ -208,7 +208,6 @@ namespace KIPC.Serialization
             while (deserializerState.pending.Count > 0)
             {
                 enumerable = deserializerState.pending.Pop();
-                bool dummy;
                 // Debug.Log(string.Format("Processing queued item {0}", idgen.GetId(enumerable, out dummy)));
                 
                 var list = enumerable as IJsonList;
@@ -254,7 +253,6 @@ namespace KIPC.Serialization
             TypeHandler handler = registry.GetDeserializer(GetTypeIdentifier(dict)).CreateHandler(this);
             ICollectionHandler ich = handler as ICollectionHandler;
             object result;
-            bool dummy;
 
             if (ich != null) {
                 // If we have a collection handler and haven't scanned for backrefs yet, scan for them.

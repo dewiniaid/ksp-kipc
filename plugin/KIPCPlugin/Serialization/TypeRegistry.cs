@@ -6,6 +6,8 @@ using System.Linq;
 
 using UnityEngine;
 
+using KIPC.Extensions;
+
 namespace KIPC.Serialization
 {
     /// <summary>
@@ -90,7 +92,7 @@ namespace KIPC.Serialization
             }
             else
             {
-                result = typeSerializers.Find(x => x.NativeType == type || type.IsSubclassOf(x.NativeType));
+                result = typeSerializers.Find(x => x.NativeType.IsParentClassOf(type));
                 serializerCache[type] = result;
             }
             if (result == null)

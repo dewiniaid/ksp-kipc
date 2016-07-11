@@ -5,6 +5,8 @@ using KIPC.Extensions;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+
+
 namespace KIPC.Serialization
 {
     using JsonList = List<object>;
@@ -21,7 +23,7 @@ namespace KIPC.Serialization
 
         public VesselHandler(TypeSerializer info, Serializer serializer) : base(info, serializer) { }
 
-        protected Vessel GetVesselById(Guid id, bool useCache = true)
+        public static Vessel GetVesselById(Guid id, bool useCache = true)
         {
             // Fast resolve if it's the active vessel, which is probably the most likely case.
             if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == id)

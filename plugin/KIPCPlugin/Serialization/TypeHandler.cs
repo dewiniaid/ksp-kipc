@@ -13,14 +13,20 @@ namespace KIPC.Serialization
     using IJsonList = IList;
     using IJsonDict = IDictionary<string, object>;
 
-    public class TypeHandler : JsonDict
-    /// Base implementation for SerializedTypes.
+    /// <summary>
+    /// Provides the base implementation for TypeHandlers, which handle deserializing JSON Data.
     /// 
-    /// Serialized Types turn into JSON Dictionaries (i.e. string: object).  They contain -- at minimum -- a 'type' field to identify them
+    /// Type Handlers turn into JSON Dictionaries (i.e. string: object).  They contain -- at minimum -- a 'type' field to identify them
     /// and a 'data' field to represent their data.
     /// 
     /// TODO: This really shouldn't be a Dictionary subclass (it should instead contain a dictionary), but I haven't figured out how to really
     /// control JsonFx and the documentation, frankly, sucks.
+    /// 
+    /// TODO: It's entirely possible these could be static or mostly-static classes with some refactoring.  This would improve deserialization performance
+    /// by having fewer objects created and less to garbage collect.  Serialization still requires a dictionary output somewhere (unless we learn how to
+    /// override that in JsonFx), so it'd be only a minor improvement in that department.
+    /// </summary>
+    public abstract class TypeHandler : JsonDict
     {
         #region Properties
         /// <summary>
@@ -62,13 +68,7 @@ namespace KIPC.Serialization
         }
     }
     /// <summary>
-    /// Base implementation for SerializedTypes.
-    /// 
-    /// Serialized Types turn into JSON Dictionaries (i.e. string: object).  They contain -- at minimum -- a 'type' field to identify them
-    /// and a 'data' field to represent their data.
-    /// 
-    /// TODO: This really shouldn't be a Dictionary subclass (it should instead contain a dictionary), but I haven't figured out how to really
-    /// control JsonFx and the documentation, frankly, sucks.
+    /// Type-specific functions for Type Handlers.
     /// </summary>
     public abstract class TypeHandler<T> : TypeHandler
     {
@@ -95,11 +95,22 @@ namespace KIPC.Serialization
         /// <summary>
         /// Convenience method; raises a SerializationException if the specified key (default 'data') does not exist.
         /// </summary>
+        /// <typeparam name="TType">Type we expect the value to be.</typeparam>
         /// <param name="key">Key in dictionary to look for </param>
+        /// <param name="mustExist">True if the value must exist.</param>
+        /// <param name="allowNull">True if value key may be null.</param>
         protected void EnsureValueIsType<TType>(string key = "data", bool mustExist = true, bool allowNull = false)
         {
             EnsureValueIsType<TType>(this, key, mustExist, allowNull);
         }
+        /// <summary>
+        /// Convenience method; raises a SerializationException if the specified key (default 'data') does not exist.
+        /// </summary>
+        /// <typeparam name="TType">Type we expect the value to be.</typeparam>
+        /// <param name="source">Source dictionary to look for </param>
+        /// <param name="key">Key in dictionary to look for </param>
+        /// <param name="mustExist">True if the value must exist.</param>
+        /// <param name="allowNull">True if value key may be null.</param>
         protected void EnsureValueIsType<TType>(IJsonDict source, string key = "data", bool mustExist = true, bool allowNull = false)
         {
             object value;

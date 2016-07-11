@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 namespace KIPC.Extensions { 
     public static class DictionaryExtensions {
         /// <summary>
@@ -13,6 +14,21 @@ namespace KIPC.Extensions {
         {
             TValue result;
             return dic.TryGetValue(key, out result) ? result : defaultValue;
+        }
+    }
+
+    public static class TypeExtensions
+    {
+        /// <summary>
+        /// Counterpart to IsSubclassOf.  Also returns true if the two types are the same type.   This differs from IsAssignableFrom in that it compares actual types and ignores cases
+        /// where a type supports assignment from another type that's not one of its subclasses.
+        /// </summary>
+        /// <param name="parent">Parent type</param>
+        /// <param name="child">Possible child type</param>
+        /// <returns>True if the child and parent represent the same type or the child is a subclass of the parent.</returns>
+        public static bool IsParentClassOf(this Type parent, Type child)
+        {
+            return child == parent || child.IsSubclassOf(parent);
         }
     }
 }

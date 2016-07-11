@@ -18,19 +18,23 @@ namespace KIPC.Serialization
     {
         public BodyHandler(TypeSerializer info, Serializer serializer) : base(info, serializer) { }
 
+        public static CelestialBody GetBodyById(int bodyId)
+        {
+            try
+            {
+                return FlightGlobals.Bodies[bodyId];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new SerializationException("Provided body ID is invalid.");
+            }
+        }
+
         public override BodyTarget Deserialize(IJsonDict source)
         {
             EnsureValueIsType<int>(source);
             int bodyId = (int)source["data"];
-            CelestialBody body;
-            try
-            {
-                body = FlightGlobals.Bodies[bodyId];
-            } catch (IndexOutOfRangeException)
-            {
-                throw new SerializationException("Provided body ID is invalid.");
-            }
-            return new BodyTarget(body, serializer.SharedObjects);
+            return new BodyTarget(GetBodyById(bodyId), serializer.SharedObjects);
         }
 
         public override TypeHandler Serialize(BodyTarget input)

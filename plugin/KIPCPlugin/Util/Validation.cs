@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
+using KIPC.Extensions;
+
 namespace KIPC.Util
 {
     /// <summary>
@@ -81,9 +83,7 @@ namespace KIPC.Util
                 if (allowNull) return;
                 throw new ArgumentNullException();
             }
-            var valueType = value.GetType();
-            // We could use type.IsAssignableFrom here, but we want to ensure it actually is that type, not merely castable.
-            if (valueType == type || valueType.IsSubclassOf(type)) return;
+            if (type.IsParentClassOf(value.GetType())) return;
             throw new ArgumentException();
         }
 
@@ -93,7 +93,7 @@ namespace KIPC.Util
         /// <param name="value">Value to test.</param>
         /// <param name="types">Allowed types</param>
         /// <param name="allowNull">True if the value is allowed to be null.</param>
-        public static void AssertType(object value, IEnumerable<Type>[] types, bool allowNull)
+        public static void AssertType(object value, IEnumerable<Type> types, bool allowNull)
         {
             if (value == null)
             {
@@ -103,8 +103,7 @@ namespace KIPC.Util
             var valueType = value.GetType();
             foreach (Type type in types)
             {
-                // We could use type.IsAssignableFrom here, but we want to ensure it actually is that type, not merely castable.
-                if (valueType == type || valueType.IsSubclassOf(type)) return;
+                if (type.IsParentClassOf(valueType)) return;
             }
             throw new ArgumentException();
         }
@@ -159,7 +158,7 @@ namespace KIPC.Util
         /// <param name="collection">Collection of values to test.</param>
         /// <param name="types">Allowed types</param>
         /// <param name="allowNull">True if values are allowed to be null.</param>
-        public static void AssertAllOfType(IEnumerable collection, IEnumerable<Type>[] types, bool allowNull)
+        public static void AssertAllOfType(IEnumerable collection, IEnumerable<Type> types, bool allowNull)
         {
             foreach (DictionaryEntry kvp in CountingIterator.GetKeyedEnumerable(collection))
             {

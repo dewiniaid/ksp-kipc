@@ -7,7 +7,7 @@
     <ProjectGuid>{FEBE111A-D442-48BF-90B3-9135B577A4F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KIPCPlugin</RootNamespace>
+    <RootNamespace>KIPC</RootNamespace>
     <AssemblyName>KIPCPlugin</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -39,6 +39,7 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\KSP\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
+      <Aliases>global</Aliases>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\KSP\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -105,13 +106,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addon.cs" />
+    <Compile Include="KOS\Extensions.cs" />
+    <Compile Include="KOS\KRPCConnection.cs" />
+    <Compile Include="KOS\KRPCClient.cs" />
+    <Compile Include="KRPC\Processor.cs" />
+    <Compile Include="KRPC\Service.cs" />
     <Compile Include="Serialization\TypeSerializer.cs" />
     <Compile Include="Serialization\TypeRegistry.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Serialization\ListHandlers.cs" />
     <Compile Include="Serialization\GeometryHandlers.cs" />
     <Compile Include="Serialization\BodyHandler.cs" />
-    <Compile Include="Serialization\SerializedVessel.cs" />
+    <Compile Include="Serialization\VesselHandler.cs" />
     <Compile Include="Serialization\LexiconHandler.cs" />
     <Compile Include="Serialization\CollectionHandler.cs" />
     <Compile Include="Serialization\Exceptions.cs" />
