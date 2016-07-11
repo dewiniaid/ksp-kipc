@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Next Phase Technologies")]
 [assembly: AssemblyProduct("KIPC")]
-[assembly: AssemblyCopyright("Copyright © 2016 Daniel J Grace <thisgenericname@gmail.com> - Licensed GPLv3")]
+[assembly: AssemblyCopyright("Copyright © 2016 Daniel J Grace a.k.a. dewin <thisgenericname@gmail.com> - Licensed GPLv3")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,10 +32,10 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
 
-[assembly: KSPAssembly("KIPC", 1, 0)]
+[assembly: KSPAssembly("KIPC", 0, 1)]
 [assembly: KSPAssemblyDependency("kOS", 0, 0)]
 [assembly: KSPAssemblyDependency("KRPC", 0, 0)]
 [assembly: KSPAssemblyDependency("KRPC.SpaceCenter", 0, 0)]
