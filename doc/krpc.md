@@ -11,8 +11,9 @@ Returns all `KOSProcessors` on the specified `vessel`.
 
 Given a vessel GUID, returns the vessel.  Use this to handle vessel references in JSON results.
 
-**GetPartsTagged(_vessel_, _tag_)**
-Returns a list of all parts tagged with the specified kOS `tag` on the specified `vessel`.
+**ResolveBody(_id_)**
+
+Given a body ID, returns the celestial body.  Use this to handle body references in JSON results.
 
 **PopMessage()**
 Removes and returns the next message in the queue, or an exception if no message exists.
@@ -135,11 +136,10 @@ Use `KIPC.ResolveBody` to convert a body reference to an actual kRPC-usable `Cel
 
 The following are from the old version of this documentation and deemed worth keeping, but they are not yet implemented.
 
-**ResolveBody(_id_)**
-
-Given a body ID, returns the celestial body.  Use this to handle body references in JSON results.
-
 **GetProcessor(_part_)**
 
 Returns the `KOSProcessors` of the specified `part`.
+
+**GetPartsTagged(_vessel_, _tag_)**
+Returns a list of all parts tagged with the specified kOS `tag` on the specified `vessel`.
 
