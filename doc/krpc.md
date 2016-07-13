@@ -1,5 +1,7 @@
 # Using KIPC with KRPC.
 
+**[ [KIPC Overview](index.md) ] [ [kOS API](kos.md) ] [ [kRPC API](krpc.md) ] [ [Changelog](CHANGELOG.md) ] [ [License](LICENSE.md) ]** 
+
 ## KIPC Service
 Handles general functionality.
 
@@ -7,19 +9,49 @@ Handles general functionality.
 
 Returns all `KOSProcessors` on the specified `vessel`.
 
+**GetProcessor(_part_)** _(Added in 0.1.1)_
+
+Returns all `KOSProcessors` on the specified `part`.  Generally this will be an empty list or a list with one element.
+
 **ResolveVessel(_guid_)**
 
 Given a vessel GUID, returns the vessel.  Use this to handle vessel references in JSON results.
+
+**ResolveVessels(_guids_)** _(Added in 0.1.1)_
+
+Given a list of vessel GUIDs, resolves all of them.  Results are in the same order as the input.
 
 **ResolveBody(_id_)**
 
 Given a body ID, returns the celestial body.  Use this to handle body references in JSON results.
 
+**ResolveBodies(_ids_)** _(Added in 0.1.1)_
+
+Given a list of body IDs, returns the corresponding celestial bodies.  Results are in the same order as the inputs.
+
 **PopMessage()**
+
 Removes and returns the next message in the queue, or an exception if no message exists.
+See the JSON Format section for details on how to parse these messages.
 
 **PeekMessage()**
-Returns the next message in the queue, or an exception if no message exists.  The message is not removed.
+
+Returns the next message in the queue, or an exception if no message exists.  The message is not removed.  
+See the JSON Format section for details on how to parse these messages.
+
+**GetMessages()** _(Added in 0.1.1)_
+
+Returns _all_ messages currently in the queue and empties the queue.  Returns an empty list if the queue is empty.
+See the JSON Format section for details on how to parse these messages.
+
+**_property_ CountMessages** (get) _(Added in 0.1.1)_
+
+Returns the number of messages in the queue.
+
+**GetPartsTagged(_vessel_, _tag_)** _(Added in 0.1.1)_
+
+Returns a list of all parts tagged with the specified kOS `tag` on the specified `vessel`.
+
 
 ## Processor class
 
@@ -27,7 +59,7 @@ Returns the next message in the queue, or an exception if no message exists.  Th
 
 **_property_ Part** (get)
 
-Returns the parent part of this kOSProcessor.
+Returns the parent part of this `kOSProcessor`.
 
 **_property_ DiskSpace** (get)
 
@@ -131,15 +163,3 @@ Use `KIPC.ResolveVessel` to convert a vessel reference to an actual kRPC-usable 
 }
 ```
 Use `KIPC.ResolveBody` to convert a body reference to an actual kRPC-usable `CelestialBody`.
-
-## Not yet implemented
-
-The following are from the old version of this documentation and deemed worth keeping, but they are not yet implemented.
-
-**GetProcessor(_part_)**
-
-Returns the `KOSProcessors` of the specified `part`.
-
-**GetPartsTagged(_vessel_, _tag_)**
-Returns a list of all parts tagged with the specified kOS `tag` on the specified `vessel`.
-

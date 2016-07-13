@@ -1,5 +1,7 @@
 ﻿# KIPC Overview
 
+**[ [KIPC Overview](index.md) ] [ [kOS API](kos.md) ] [ [kRPC API](krpc.md) ] [ [Changelog](CHANGELOG.md) ] [ [License](LICENSE.md) ]** 
+
 ## About
 
 KIPC (Kerbal Inter-Process Communication) provides a bridge between kOS and KRPC.  Specifically, it adds the ability
@@ -25,13 +27,16 @@ from scratch if they're inspired to start learning a mainstream programming lang
 
 ## Use Cases
 
-There's two main scenarios where I can see the bridge being useful, though others likely exist.
+Here's a few scenarios where the combination of kRPC and kOS can be useful.  You can probably think of some more.
 
  * **kOS As Mission Control**: kOS handles the overall control of a particular vessel, with requests sent to kRPC for
    complex tasks like maneuver planning.
  * **kRPC as Mission Control**: kRPC handles the overall control of a particular vessel, with requests sent to kOS for
    real-time tasks like executing a planned maneuver.
-   
+ * **kRPC for user input**: Display a rudimentary user interface in a kRPC client which then relays interface 
+   selections back to kOS.
+ * **kRPC for data visualization**: Let kOS fly while kRPC renders pretty graphs in realtime.
+     
 ## Architecture
 
 From kOS's perspective, `addons:kipc:connection` functions similar to a connection another `kOSProcessor` on the 
