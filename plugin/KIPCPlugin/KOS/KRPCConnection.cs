@@ -21,8 +21,6 @@ namespace KIPC.KOS
         {
             Client = client;
             this.shared = shared;
-            // placeholder = (shared.Processor as kOS.Module.kOSProcessor).ExecuteInterProcCommand(command)
-
         }
 
         public override bool Connected { get; } = true;

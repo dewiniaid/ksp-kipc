@@ -63,6 +63,11 @@ namespace KIPC.KRPC
             Part = new Part(this.processor.part);
         }
 
+        public static explicit operator Processor(kOSProcessor processor)
+        {
+            return new Processor(processor);
+        }
+
         /// <summary>
         /// Returns true if the objects are equal.
         /// </summary>

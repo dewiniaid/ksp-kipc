@@ -92,7 +92,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
@@ -141,7 +140,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>powershell $(SolutionDir)\Postbuild.ps1 $(ProjectDir)$(OutDir) $(SolutionDir)..\KSP\GameData\KIPCPlugin\Plugins</PostBuildEvent>
+    <PostBuildEvent>powershell $(SolutionDir)\Postbuild.ps1 -BuildDir $(ProjectDir)$(OutDir) -KSPDir $(SolutionDir)..\KSP -OutputDir $(SolutionDir)..\Output -ScriptsDir $(SolutionDir)..\Python\venv\lib\site-packages\krpctools\bin
+</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.1.28.3\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.3\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
