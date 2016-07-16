@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AC48674B-DA82-45FA-AEFF-96AD040C3974}"
+	ProjectSection(SolutionItems) = preProject
+		KIPC.version = KIPC.version
+		KIPC.version.template = KIPC.version.template
+		Postbuild.ps1 = Postbuild.ps1
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIPC", "KIPCPlugin\KIPC.csproj", "{FEBE111A-D442-48BF-90B3-9135B577A4F6}"
 EndProject

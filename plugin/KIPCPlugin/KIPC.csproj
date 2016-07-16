@@ -140,8 +140,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>powershell $(SolutionDir)\Postbuild.ps1 -BuildDir $(ProjectDir)$(OutDir) -KSPDir $(SolutionDir)..\KSP -OutputDir $(SolutionDir)..\Output -ScriptsDir $(SolutionDir)..\Python\venv\lib\site-packages\krpctools\bin
-</PostBuildEvent>
+    <PostBuildEvent>powershell $(SolutionDir)\Postbuild.ps1 -BuildDir $(ProjectDir)$(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.1.28.3\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.3\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
