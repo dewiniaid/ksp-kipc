@@ -32,10 +32,10 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.1.0")]
-[assembly: AssemblyFileVersion("0.1.1.0")]
+[assembly: AssemblyVersion("0.2.0.0")]
+[assembly: AssemblyFileVersion("0.2.0.0")]
 
-[assembly: KSPAssembly("KIPC", 0, 1)]
+[assembly: KSPAssembly("KIPC", 0, 2)]
 [assembly: KSPAssemblyDependency("kOS", 0, 0)]
 [assembly: KSPAssemblyDependency("KRPC", 0, 0)]
 [assembly: KSPAssemblyDependency("KRPC.SpaceCenter", 0, 0)]

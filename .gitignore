@@ -4,6 +4,7 @@
 KSP/*
 # Just say no to binary output
 plugin/Output/*
+Output/*
 
 
 ### Csharp ###

@@ -1,78 +1,83 @@
 # powershell $(SolutionDir)\Postbuild.ps1 -BuildDir $(ProjectDir)$(OutDir) -KSPDir $(SolutionDir)..\KSP -OutputDir $(SolutionDir)..\Output -ClientGen $(SolutionDir)..\Python\venv\scripts
-
-
 Param (
-    [Parameter(Mandatory=$false, Position=0)]
-    $BuildDir = "D:\git\KIPC\plugin\KIPCPlugin\bin\Release\",
+    [Parameter(Mandatory=$true, Position=0)]
+    $BuildDir,
 
-    [Parameter(Mandatory=$false, Position=1)]
-    $OutputDir = "D:\git\KIPC\output\",
+    [Parameter(Mandatory=$true, Position=1)]
+    $OutputDir,
 
-    [Parameter(Mandatory=$false, Position=2)]
-    $KSPDir = "D:\git\KIPC\KSP\",
+    [Parameter(Mandatory=$true, Position=2)]
+    $KSPDir,
 
-    [Parameter(Mandatory=$false, Position=3)]
-    $ScriptsDir = "D:\git\KIPC\Python\venv\scripts\"
+    [Parameter(Mandatory=$true, Position=3)]
+    $ScriptsDir
+)
+
+$Languages = @(
+    New-Object -TypeName PSObject -Property @{'Lang'='csharp'; 'File'='KIPC.cs'}
+    New-Object -TypeName PSObject -Property @{'Lang'='cpp'; 'File'='KIPC.hpp'}
+    New-Object -TypeName PSObject -Property @{'Lang'='java'; 'File'='KIPC.java'}
 )
 
 $BuildDir = (Get-Item $BuildDir).FullName
 $OutputDir = (Get-Item $OutputDir).FullName
 $KSPDir = (Get-Item $KSPDir).FullName
 $ScriptsDir = (Get-Item $ScriptsDir).FullName
+$ClientGen = Join-Path $ScriptsDir "krpc-clientgen"
 
-mkdir $BuildDir\temp -ErrorAction Ignore | Out-Null 
-mkdir $BuildDir\temp\stubs  -ErrorAction Ignore | Out-Null 
+# We're going to need a tempdir.  Make one
+$TempPath = [System.IO.Path]::GetTempPath()
+while($true) {
+    $TempDir = Join-Path $TempPath ([System.IO.Path]::GetRandomFileName())
+    mkdir $TempDir -ErrorVariable DirErr -ErrorAction SilentlyContinue
+    if($DirErr) { continue }
+    break
+}
+Register-EngineEvent -SourceIdentifier Powershell.Exiting -SupportEvent -Action {
+    rmdir $TempDir -Recurse -Verbose -Force
+}
 
-# Identify build DLLs
-$BuildDLLs = Get-Item $BuildDir/*.dll
+# Create folder structure
+mkdir $TempDir/Output | Out-Null
+mkdir $TempDir/Output/Clients | Out-Null
+mkdir $TempDir/Output/GameData/KIPC | Out-Null
+mkdir $TempDir/Output/GameData/KIPC/Plugins | Out-Null
+mkdir $TempDir/DLLs | Out-Null
 
-# Clean and rebuild the output dir.
-mkdir $OutputDir -ErrorAction Ignore
-Remove-Item $OutputDir/Gamedata -Recurse -Verbose -Force
+# Copy DLLs.
+$BuildDLLs = gci $BuildDir -Filter "*.dll"
+$BuildDLLs | %{ Copy-Item $_.FullName $TempDir/Output/GameData/KIPC/Plugins -Verbose -Force }
+$BuildDLLs | %{ Copy-Item $_.FullName $TempDir/DLLs -Verbose -Force }
 
-# Build our mirror of gamedata.
-mkdir $OutputDir/GameData -Verbose -ErrorAction Ignore | Out-Null
-mkdir $OutputDir/GameData/KIPC  -Verbose -ErrorAction Ignore | Out-Null
-mkdir $OutputDir/GameData/KIPC/Plugins  -Verbose -ErrorAction Ignore | Out-Null
-$BuildDLLs | %{ Copy-Item $_ $OutputDir/GameData/KIPC/Plugins -Verbose -Force }
+$Dependencies = @(gci $KSPDir/GameData/KOS -Filter "*.dll" -Recurse) + @(gci $KSPDir/GameData/KRPC -Filter "*.dll" -Recurse)
+$Dependencies | %{ Copy-Item $_.FullName $TempDir/DLLs -Verbose -Force }
 
-Compress-Archive -Path $OutputDir/Gamedata -DestinationPath $Outputdir/KIPC.zip -Force
+# Build client libraries.
+$ClientDefs = "$TempDir/Output/Clients/clientdefs.json"
+Push-Location $TempDir/DLLs
+$HaveJSON = $false
+foreach($Language in $Languages) {
+    $LangDir = Join-Path $TempDir/Output/Clients $Language.Lang
+    $OutputFile = Join-Path $LangDir $Language.File
+    echo $OutputFile
+    mkdir $LangDir | Out-Null
+    if($HaveJSON) {
+        $Args = @($Language.Lang, "KIPC", $ClientDefs)
+    } else {
+        $HaveJSON = $true
+        $Args = @($Language.Lang, "KIPC", "--ksp", $KSPDir, "--output-defs", $ClientDefs) + @($BuildDLLs | %{ $_.Name })
+    }
+    echo ($ClientGen + " " + ($Args -Join " "))
+    &$ClientGen $args | Out-File $OutputFile
+}
+Pop-Location
+
+# zip the output folder
+Compress-Archive -Path $TempDir/Output/* -DestinationPath $TempDir/KIPC.zip -Force -Verbose
+Move-Item $TempDir/KIPC.zip $TempDir/Output/KIPC.zip
+
+# Move the output dir to where it should be.
+robocopy /MIR $Tempdir/Output $OutputDir
 
 # Mirror to KSP
 robocopy /MIR $OutputDir/Gamedata/KIPC $KSPDir/Gamedata/KIPC
-
-# TODO: Fix the rest of this to generate client libraries correctly.
-
-
-exit
-
-
-
-
-
-# Find additional dependencies.
-$DependencyDLLs = @(gci $KSPDir/GameData/kOS -recurse -Filter "*.dll")
-foreach($Dep in "Assembly-CSharp*.dll", "KSP*.dll", "System*.dll", "UnityEngine*.dll") {
-    $DependencyDLLs += gci $KSPDir/KSP_x64_Data/Managed -Filter $Dep
-}
-# + @(gci $KSPDir/KSP_Data/Managed -recurse -Filter "*.dll")
-#  (gci $KSPDir/GameData/KRPC -recurse -Filter "*.dll") + 
-
-# Move all to tempdir.
-$BuildDLLs | %{ Copy-Item $_.FullName $BuildDir/temp -Verbose -Force }
-$DependencyDLLs | %{ Copy-Item $_.FullName $BuildDir/temp -Verbose -Force }
-Push-Location $BuildDir/temp
-$Stubber = "D:\Git\KIPC\Build\Stubber.exe"
-$StubberParams = @($BuildDLLs | %{ $_.Name }) + @("stubs\");
-&$Stubber $StubberParams
-$StubberParams = @($DependencyDLLs | %{ $_.Name }) + @("stubs\");
-&$Stubber $StubberParams
-
-$ClientGenArgs = @("--ksp", $KSPDir, "csharp", "KIPC", "--output", "$OutputDir/plugin.defs") + @($BuildDLLs | %{ $_.Name }) + @($DependencyDLLs | %{ "stubs\" + $_.Name })
-$ClientGenArgs += @(gci $KSPDir/GameData/RRPC -recurse -Filter "*.dll" | %{ $_.FullName });
-$ClientGen = (Get-Item "$ScriptsDir\krpc-clientgen.exe").FullName
-&$ClientGen $ClientGenArgs
-echo $ClientGen ($ClientGenArgs -join (" "))
-Pop-Location
-
-exit
