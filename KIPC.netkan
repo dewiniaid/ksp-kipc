@@ -7,17 +7,17 @@
 	"name"				: "kIPC: Kerbal Interprocess Communication",
 	"abstract"			: "Provides a communication bridge between kOS and kRPC.",
 	"description"       : "kIPC adds a bridge between kOS and kRPC.  It allows kOS processors to send messages to kRPC clients and allows kRPC clients to send messages directly to kOS procesors.",
-	"license"			: "GPL-3",
+	"license"			: "GPL-3.0",
 	"release_status"	: "testing",
 	"resources" : {
 		"homepage" : "http://forum.kerbalspaceprogram.com/index.php?/topic/142979-113",
 		"repository" : "https://github.com/dewiniaid/ksp-kipc",
-		"manual" : "https://github.com/dewiniaid/ksp-kipc/blob/master/doc/index.md",
+		"manual" : "https://github.com/dewiniaid/ksp-kipc/blob/master/doc/index.md"
 	},
 	"install" : [
 		{
 			"file": "GameData/KIPC",
-			"install_to": "GameData",
+			"install_to": "GameData"
 		}
 	],
 	"x_last_revision_by": "dewin",
