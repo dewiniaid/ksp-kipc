@@ -24,5 +24,11 @@
 	"depends": [
 		{ "name": "kOS", "min_version" : "1.0.0" },
 		{ "name": "kRPC" }
+	],
+	"x_netkan_override": [
+		{
+			"version": "v0.2.0-beta",
+			"override": { "ksp_version_max": "1.1.99" }
+		}
 	]
 }
