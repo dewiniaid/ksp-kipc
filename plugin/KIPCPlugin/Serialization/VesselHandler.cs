@@ -64,7 +64,7 @@ namespace KIPC.Serialization
             }
             Vessel vessel = GetVesselById(vesselId);
             if (vessel == null) return null;  // kOS won't really like this, but meh.
-            return new VesselTarget(vessel, serializer.SharedObjects);
+            return VesselTarget.CreateOrGetExisting(vessel, serializer.SharedObjects);
         }
 
         public override TypeHandler Serialize(VesselTarget input)

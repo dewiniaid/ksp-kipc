@@ -34,7 +34,7 @@ namespace KIPC.Serialization
         {
             EnsureValueIsType<int>(source);
             int bodyId = (int)source["data"];
-            return new BodyTarget(GetBodyById(bodyId), serializer.SharedObjects);
+            return BodyTarget.CreateOrGetExisting(GetBodyById(bodyId), serializer.SharedObjects);
         }
 
         public override TypeHandler Serialize(BodyTarget input)

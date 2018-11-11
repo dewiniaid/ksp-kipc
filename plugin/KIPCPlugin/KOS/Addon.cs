@@ -51,7 +51,7 @@ namespace KIPC.KOS
         {
             double sentAt = Planetarium.GetUniversalTime();
             double receivedAt = sentAt;
-            Message message = Message.Create(content, sentAt, receivedAt, new VesselTarget(shared), shared.Processor.Tag);
+            Message message = Message.Create(content, sentAt, receivedAt, VesselTarget.CreateOrGetExisting(shared), shared.Processor.Tag);
             MessageQueueStructure queue = InterVesselManager.Instance.GetQueue(target.Vessel, shared);
             queue.Push(message);
             return true;
